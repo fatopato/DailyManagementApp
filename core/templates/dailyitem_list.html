@@ -1,0 +1,42 @@
+<!-- dailyitem_list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>DailyItem List</h1>
+
+<form action="{% url 'core:dailyitem_list' %}" method="GET">
+    <label for="team_member_id">Team Member:</label>
+    <select id="team_member_id" name="team_member_id">
+        <option value="">All</option>
+        {% for team_member in team_members %}
+        <option value="{{ team_member.id }}" {% if team_member.id|stringformat:"s" == team_member_id %}selected{% endif %}>{{ team_member.username }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" value="{{ date }}">
+
+    <button type="submit">Filter</button>
+</form>
+
+{% if dailyitems %}
+<ul>
+    {% for dailyitem in dailyitems %}
+    <li>
+        {% if dailyitem.team_member == user %}
+        <a href="{% url 'dailyitem_edit' dailyitem.pk %}">{{ dailyitem.title }}</a>
+        {% else %}
+        {{ dailyitem.title }}
+        {% endif %}
+        - {{ dailyitem.description }}
+    </li>
+    {% endfor %}
+</ul>
+
+    </ul>
+</nav>
+{% else %}
+<p>No DailyItems found.</p>
+{% endif %}
+
+{% endblock %}
